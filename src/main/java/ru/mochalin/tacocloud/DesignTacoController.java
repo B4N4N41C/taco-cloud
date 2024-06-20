@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,7 +18,7 @@ import ru.mochalin.tacocloud.Ingredient.Type;
 @Controller
 @RequestMapping("/design")
 @SessionAttributes("tacoOrder")
-public class DesignTacoControllet {
+public class DesignTacoController {
 
     @ModelAttribute
     public void addIngredientsToModel(Model model) {
@@ -55,7 +54,7 @@ public class DesignTacoControllet {
 
     @GetMapping
     public String showDesignForm(){
-        return "design";
+        return "design_taco";
     }
 
     private Iterable<Ingredient> filterByType(
