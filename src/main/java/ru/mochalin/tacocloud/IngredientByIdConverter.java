@@ -1,5 +1,6 @@
 package ru.mochalin.tacocloud;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 import ru.mochalin.tacocloud.Ingredient.Type;
@@ -9,6 +10,18 @@ import java.util.Map;
 
 @Component
 public class IngredientByIdConverter  implements Converter<String, Ingredient> {
+
+    private IngredientRepository ingredientRepository;
+
+    @Autowired
+    public IngredientByIdConverter(IngredientRepository ingredientRepository) {
+        this.ingredientRepository = ingredientRepository;
+    }
+
+    @Override
+    public Ingredient convert(String id) {
+        return ingredientRepository.findById(id).orElse(null);
+    }
 
     private final Map<String, Ingredient> ingredientMap = new HashMap<>();
 
@@ -23,10 +36,5 @@ public class IngredientByIdConverter  implements Converter<String, Ingredient> {
         ingredientMap.put("JACK", new Ingredient("JACK", "Monterrey Jack", Type.CHEESE));
         ingredientMap.put("SLSA", new Ingredient("SLSA", "Salsa", Type.SOUCE));
         ingredientMap.put("SRCR", new Ingredient("SRCR", "Sour Cream", Type.SOUCE));
-    }
-
-    @Override
-    public Ingredient convert(String id) {
-        return ingredientMap.get(id);
     }
 }

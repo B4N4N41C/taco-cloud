@@ -1,6 +1,7 @@
 package ru.mochalin.tacocloud;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -21,33 +22,47 @@ import javax.validation.Valid;
 @SessionAttributes("tacoOrder")
 public class DesignTacoController {
 
-    private final View error;
+    private IngredientRepository ingredientRepository;
+    //private View error;
 
-    public DesignTacoController(View error) {
-        this.error = error;
+    @Autowired
+    public DesignTacoController(
+            IngredientRepository ingredientRepository, View error) {
+        this.ingredientRepository = ingredientRepository;
+      //  this.error = error;
     }
 
     @ModelAttribute
-    public void addIngredientsToModel(Model model) {
-        List<Ingredient> ingredients = Arrays.asList(
-                new Ingredient("FLTO", "Flour Tortilla", Ingredient.Type.WRAP),
-                new Ingredient("COTO", "Corn Tortilla", Ingredient.Type.WRAP),
-                new Ingredient("GRBF", "Ground Beef", Ingredient.Type.PROTEIN),
-                new Ingredient("CARN", "Carnitas", Ingredient.Type.PROTEIN),
-                new Ingredient("TMTO", "Diced Tomatoes", Ingredient.Type.VEGGIES),
-                new Ingredient("LETC", "Lettuce", Ingredient.Type.VEGGIES),
-                new Ingredient("CHED", "Cheddar", Ingredient.Type.CHEESE),
-                new Ingredient("JACK", "Monterrey Jack", Ingredient.Type.CHEESE),
-                new Ingredient("SLSA", "Salsa", Ingredient.Type.SOUCE),
-                new Ingredient("SRCR", "Sour Cream", Ingredient.Type.SOUCE)
-        );
-
+    public void addIngredientToModel(Model model) {
+        Iterable<Ingredient> ingredients = ingredientRepository.findAll();
         Type[] types = Ingredient.Type.values();
-        for (Type type : types) {
+        for (Type type : types){
             model.addAttribute(type.toString().toLowerCase(),
-                    filterByType(ingredients, type));
+                    filterByType((List<Ingredient>) ingredients,type));
         }
     }
+
+//    @ModelAttribute
+//    public void addIngredientsToModel(Model model) {
+//        List<Ingredient> ingredients = Arrays.asList(
+//                new Ingredient("FLTO", "Flour Tortilla", Ingredient.Type.WRAP),
+//                new Ingredient("COTO", "Corn Tortilla", Ingredient.Type.WRAP),
+//                new Ingredient("GRBF", "Ground Beef", Ingredient.Type.PROTEIN),
+//                new Ingredient("CARN", "Carnitas", Ingredient.Type.PROTEIN),
+//                new Ingredient("TMTO", "Diced Tomatoes", Ingredient.Type.VEGGIES),
+//                new Ingredient("LETC", "Lettuce", Ingredient.Type.VEGGIES),
+//                new Ingredient("CHED", "Cheddar", Ingredient.Type.CHEESE),
+//                new Ingredient("JACK", "Monterrey Jack", Ingredient.Type.CHEESE),
+//                new Ingredient("SLSA", "Salsa", Ingredient.Type.SOUCE),
+//                new Ingredient("SRCR", "Sour Cream", Ingredient.Type.SOUCE)
+//        );
+//
+//        Type[] types = Ingredient.Type.values();
+//        for (Type type : types) {
+//            model.addAttribute(type.toString().toLowerCase(),
+//                    filterByType(ingredients, type));
+//        }
+//    }
 
     @ModelAttribute(name = "tacoOrder")
     public TacoOrder order() {
