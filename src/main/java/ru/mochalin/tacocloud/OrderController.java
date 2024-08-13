@@ -17,6 +17,12 @@ import javax.validation.Valid;
 @SessionAttributes("tacoOrder")
 public class OrderController {
 
+    private OrderRepository orderRepository;
+
+    public OrderController(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
+    }
+
     @GetMapping("/current")
     public String orderForm(){
         return "orderForm";
@@ -28,7 +34,7 @@ public class OrderController {
         if (errors.hasErrors()) {
             return "orderForm";
         }
-        log.info("Order submitted: {}", order);
+        orderRepository.save(order);
         sessionStatus.setComplete();
 
         return "redirect:/";
