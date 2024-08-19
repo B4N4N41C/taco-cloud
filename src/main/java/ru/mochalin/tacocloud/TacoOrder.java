@@ -2,6 +2,9 @@ package ru.mochalin.tacocloud;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.CreditCardNumber;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
@@ -11,14 +14,17 @@ import java.util.Date;
 import java.util.List;
 
 @Data
+@Table("Taco_Cloud_Order")
 public class TacoOrder {
 
     private static final long serialVersionUID = 1L;
 
+    @Id
     private Long id;
     
     private Date placedAt;
 
+    @Column("customer_name")
     @NotBlank(message = "Delivery name is required")
     private String deliveryName;
 
